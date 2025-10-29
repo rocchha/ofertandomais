@@ -3,29 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ofertando Mais</title>
+  <title>Ofertando+</title>
   <meta name="theme-color" content="#3a0f5f"/>
-  <meta name="description" content="Ofertando Mais — Descontos reais todos os dias. Comparativo Shopee x Mercado Livre." />
-
+  <meta name="description" content="Ofertando+ — Descontos reais todos os dias. Comparativo Shopee x Mercado Livre." />
   <style>
     :root{
       --bg:#f6f5f9;
       --card:#ffffff;
-      --purple:#3a0f5f;   /* roxo escuro */
+      --purple:#3a0f5f;
       --purple-2:#5b2a86;
-      --accent:#ff8bd8;   /* destaque suave */
+      --accent:#ff8bd8;
       --btn:#ffd6f6;
       --text:#111827;
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),#f3eef8);color:var(--text);-webkit-font-smoothing:antialiased}
-    header{background:linear-gradient(180deg,var(--purple),var(--purple-2));color:white;padding:18px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+    header{background:linear-gradient(180deg,var(--purple),var(--purple-2));color:white;padding:14px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
     .logo {width:44px;height:44px;display:inline-block;border-radius:10px;background:linear-gradient(180deg,#6a3aa0,#3a0f5f);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:20px}
     h1{font-size:18px;margin:0;font-weight:700}
     .slogan{font-size:13px;opacity:.95}
-    main{padding:14px;max-width:980px;margin:0 auto}
+    main{padding:12px;max-width:1100px;margin:0 auto}
     .controls{display:flex;gap:8px;align-items:center;margin:12px 0 18px;flex-wrap:wrap}
-    .controls select, .controls input{padding:10px;border-radius:10px;border:1px solid #efe6f6;background:white;min-width:120px}
+    .controls select, .controls input{padding:9px;border-radius:10px;border:1px solid #efe6f6;background:white;min-width:120px}
     .controls .search{flex:1;min-width:140px}
     .grid{display:grid;grid-template-columns:repeat(1,1fr);gap:12px}
     @media(min-width:640px){ .grid{grid-template-columns:repeat(2,1fr)} }
@@ -34,7 +33,7 @@
     .category{margin-top:6px}
     .cat-title{display:flex;justify-content:space-between;align-items:center;margin:8px 0 6px}
     .cat-title h2{margin:0;font-size:16px;color:var(--purple)}
-    .cards-row{display:flex;gap:8px}
+    .cards-row{display:flex;gap:8px;flex-wrap:wrap}
 
     .card{background:var(--card);border-radius:12px;padding:10px;box-shadow:0 6px 18px rgba(58,15,95,0.06);flex:1;display:flex;flex-direction:column;min-width:0}
     .thumb{width:100%;height:140px;object-fit:cover;border-radius:8px;background:#f2eaf8}
@@ -45,20 +44,26 @@
     .btn-ml{background:linear-gradient(90deg,#ffe7f8,#ffd6f6);color:var(--purple);border:1px solid rgba(58,15,95,0.06)}
     .btn-sh{background:linear-gradient(90deg,#fff1e6,#fff0d6);color:#7a3a00;border:1px solid rgba(122,58,0,0.06)}
 
-    /* comparison layout */
     .compare{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     @media(max-width:520px){ .compare{grid-template-columns:1fr} }
 
     footer{padding:18px;text-align:center;color:#6b7280;font-size:13px;margin-top:18px}
     .install{margin-left:auto;background:rgba(255,255,255,0.06);padding:6px 10px;border-radius:10px;color:white;font-weight:700;border:1px solid rgba(255,255,255,0.06)}
     .badge{background:var(--accent);color:white;padding:6px 8px;border-radius:999px;font-size:12px;font-weight:700}
+
+    /* pagination */
+    .pager{display:flex;gap:8px;justify-content:center;margin:14px 0}
+    .pageBtn{padding:8px 12px;border:1px solid #eee;background:white;border-radius:8px;cursor:pointer}
+    input[type=file]{display:none}
+    .importWrap{display:flex;gap:8px;align-items:center}
+    .smallNote{font-size:12px;color:#6b7280}
   </style>
 </head>
 <body>
   <header>
     <div class="logo">+</div>
     <div>
-      <h1>Ofertando Mais</h1>
+      <h1>Ofertando+</h1>
       <div class="slogan">Descontos reais todos os dias 💜</div>
     </div>
     <div style="flex:1"></div>
@@ -76,151 +81,200 @@
         <option value="sh">Shopee</option>
       </select>
       <input id="q" class="search" placeholder="Buscar produto..." />
+      <div class="importWrap">
+        <label for="fileCsv" class="pageBtn">Importar CSV</label>
+        <input id="fileCsv" type="file" accept=".csv,text/csv" />
+        <button id="clearBtn" class="pageBtn">Limpar</button>
+      </div>
     </section>
 
     <div id="content"></div>
 
+    <div class="pager" id="pager"></div>
+
     <footer>
-      <div><small>Ofertando Mais — Links de afiliado. Transparência e ofertas reais.</small></div>
+      <div><small>Ofertando+ — Links de afiliado. Transparência e ofertas reais.</small></div>
       <div style="margin-top:6px"><small class="badge">Shopee & Mercado Livre</small></div>
     </footer>
   </main>
 
 <script>
-/*
-  Versão simples e prática (manual/sem API realtime):
-  - Os itens abaixo são exemplos; cada produto mostrará o comparativo lado-a-lado
-  - Todos os links da Shopee e Mercado Livre usam os seus links afiliados (mesmo link por loja)
-  - Para trocar/editar: substitua as entradas no array `products` abaixo
-*/
+/* === CONFIGURE AQUI OS SEUS LINKS (já configurados com os que você forneceu) === */
+const DEFAULT_AFF_ML = "https://mercadolivre.com/sec/1jqZ4VC";
+const DEFAULT_AFF_SH = "https://s.shopee.com.br/gHq992bIx";
+/* ============================================================================ */
 
-const AFF_ML = "https://mercadolivre.com/sec/2FDLw3P";
-const AFF_SH = "https://s.shopee.com.br/2g2uIgo8YE";
+let PRODUCTS = []; // será preenchido via CSV ou demo
+const perPage = 12;
+let currentPage = 1;
+let currentProducts = [];
 
-/* Lista de categorias e produtos (exemplo) */
-const categories = [
-  { id: "celulares", name: "Celulares & Acessórios" },
-  { id: "cozinha", name: "Cozinha & Utilidades" },
-  { id: "moda", name: "Moda" },
-  { id: "eletronicos", name: "Eletrônicos & Informática" },
-  { id: "infantil", name: "Infantil & Bebês" },
-  { id: "beleza", name: "Beleza & Cuidados" },
-  { id: "casa", name: "Casa & Decoração" },
-  { id: "games", name: "Games" },
-  { id: "pets", name: "Pets" }
-];
+const selectCategory = document.getElementById('selectCategory');
+const selectStore = document.getElementById('selectStore');
+const qInput = document.getElementById('q');
+const content = document.getElementById('content');
+const pager = document.getElementById('pager');
 
-/* Produtos de exemplo — todos usam os mesmos links afiliados por loja (como você pediu).
-   Cada produto tem: id, title, image (URL), price_ml, price_sh, category
-   Substitua as imagens (image) e preços quando quiser.
-*/
-const products = [
-  // Celulares
-  { id:"p1", title:"Smartphone X 128GB", image:"https://i.imgur.com/8Qf2g3M.jpg", price_ml:"R$1.499", price_sh:"R$1.439", category:"celulares" },
-  { id:"p2", title:"Fone Bluetooth Pro", image:"https://i.imgur.com/1KQ9ZsH.jpg", price_ml:"R$199", price_sh:"R$179", category:"celulares" },
-  // Cozinha
-  { id:"p3", title:"AirFryer 3,2L", image:"https://i.imgur.com/7K7pJ2y.jpg", price_ml:"R$299", price_sh:"R$279", category:"cozinha" },
-  { id:"p4", title:"Jogo de Panelas 5pcs", image:"https://i.imgur.com/4YcQb2Z.jpg", price_ml:"R$249", price_sh:"R$229", category:"cozinha" },
-  // Moda
-  { id:"p5", title:"Tênis Esportivo", image:"https://i.imgur.com/y2Q0f1w.jpg", price_ml:"R$179", price_sh:"R$159", category:"moda" },
-  { id:"p6", title:"Vestido Casual", image:"https://i.imgur.com/6wH2ZcI.jpg", price_ml:"R$129", price_sh:"R$119", category:"moda" },
-  // Eletrônicos
-  { id:"p7", title:"Notebook 8GB/256GB", image:"https://i.imgur.com/2jK8G5L.jpg", price_ml:"R$2.499", price_sh:"R$2.399", category:"eletronicos" },
-  { id:"p8", title:"SSD 1TB NVMe", image:"https://i.imgur.com/3kL9n7Q.jpg", price_ml:"R$419", price_sh:"R$389", category:"eletronicos" },
-  // Infantil
-  { id:"p9", title:"Cadeira de Balanço Bébé", image:"https://i.imgur.com/9v4Yv0G.jpg", price_ml:"R$199", price_sh:"R$189", category:"infantil" },
-  { id:"p10", title:"Brinquedo Educativo", image:"https://i.imgur.com/0V6W8xR.jpg", price_ml:"R$79", price_sh:"R$69", category:"infantil" },
-  // Beleza
-  { id:"p11", title:"Kit Skincare Básico", image:"https://i.imgur.com/5tQ1ZkD.jpg", price_ml:"R$149", price_sh:"R$139", category:"beleza" },
-  // Casa
-  { id:"p12", title:"Luminária LED Smart", image:"https://i.imgur.com/hs2Qk2a.jpg", price_ml:"R$99", price_sh:"R$89", category:"casa" },
-  // Games
-  { id:"p13", title:"Controle GamePad", image:"https://i.imgur.com/4B6rZ3S.jpg", price_ml:"R$199", price_sh:"R$189", category:"games" },
-  // Pets
-  { id:"p14", title:"Coleira Anti-puxão", image:"https://i.imgur.com/dYw8k6z.jpg", price_ml:"R$49", price_sh:"R$39", category:"pets" }
-];
+function parseCSV(text){
+  const lines = text.trim().split(/\r?\n/).filter(l=>l.trim());
+  const headers = lines.shift().split(',').map(h=>h.trim());
+  const out = [];
+  for(const line of lines){
+    const cells = line.split(',').map(c=>c.trim());
+    if(cells.length < headers.length) continue;
+    const obj = {};
+    headers.forEach((h,i)=> obj[h] = cells[i] || '');
+    out.push(obj);
+  }
+  return out;
+}
 
-/* Inicialização: preencher selects */
-const selCat = document.getElementById('selectCategory');
-categories.forEach(c => {
-  const opt = document.createElement('option'); opt.value = c.id; opt.textContent = c.name;
-  selCat.appendChild(opt);
-});
+function setCategories(){
+  const cats = Array.from(new Set(PRODUCTS.map(p=>p.category))).filter(Boolean);
+  selectCategory.innerHTML = '<option value="all">Todas as categorias</option>';
+  cats.forEach(c=>{
+    const opt = document.createElement('option'); opt.value=c; opt.textContent = c[0]?.toUpperCase()+c.slice(1);
+    selectCategory.appendChild(opt);
+  });
+}
 
-/* Render */
-function render(){
-  const storeFilter = document.getElementById('selectStore').value;
-  const q = (document.getElementById('q').value||'').toLowerCase();
-  const cat = document.getElementById('selectCategory').value;
+function renderPage(page=1){
+  currentPage = page;
+  const storeFilter = selectStore.value;
+  const q = (qInput.value||'').toLowerCase();
+  const cat = selectCategory.value;
 
-  const container = document.getElementById('content');
-  container.innerHTML = '';
+  let items = PRODUCTS.filter(p=>{
+    if(!p.title) return false;
+    if(cat!=='all' && p.category!==cat) return false;
+    if(q && !p.title.toLowerCase().includes(q)) return false;
+    return true;
+  });
 
-  const catsToShow = cat === 'all' ? categories : categories.filter(c=>c.id===cat);
+  // sort
+  items.sort((a,b)=> (a.category||'').localeCompare(b.category||'') || (a.title||'').localeCompare(b.title||''));
 
-  catsToShow.forEach(c=>{
-    const items = products.filter(p=>p.category===c.id && (q==='' || p.title.toLowerCase().includes(q)));
-    if(items.length===0) return;
-    const catEl = document.createElement('section'); catEl.className='category';
+  const total = items.length;
+  const pages = Math.max(1, Math.ceil(total / perPage));
+  if(page < 1) page = 1;
+  if(page > pages) page = pages;
+
+  const start = (page-1)*perPage;
+  const pageItems = items.slice(start, start+perPage);
+  currentProducts = pageItems;
+
+  content.innerHTML = '';
+  // group by category
+  const groups = {};
+  pageItems.forEach(p => { groups[p.category] = groups[p.category] || []; groups[p.category].push(p); });
+
+  for(const [catName, arr] of Object.entries(groups)){
+    const section = document.createElement('section'); section.className='category';
     const titleRow = document.createElement('div'); titleRow.className='cat-title';
-    const h2 = document.createElement('h2'); h2.textContent = c.name;
-    const more = document.createElement('div'); more.innerHTML = `<small style="color:#6b7280"> ${items.length} ofertas</small>`;
+    const h2 = document.createElement('h2'); h2.textContent = catName[0]?.toUpperCase()+catName.slice(1);
+    const more = document.createElement('div'); more.innerHTML = `<small style="color:#6b7280">${arr.length} ofertas</small>`;
     titleRow.appendChild(h2); titleRow.appendChild(more);
-    catEl.appendChild(titleRow);
+    section.appendChild(titleRow);
 
-    // For each product, show compare block side-by-side
-    items.forEach(p=>{
+    arr.forEach(p=>{
       const comp = document.createElement('div'); comp.className='compare';
       // Mercado Livre card
       const cardML = document.createElement('div'); cardML.className='card';
+      const mlLink = (p.link_ml && p.link_ml.trim().length>5) ? p.link_ml : DEFAULT_AFF_ML;
+      const shLink = (p.link_sh && p.link_sh.trim().length>5) ? p.link_sh : DEFAULT_AFF_SH;
       cardML.innerHTML = `
-        <img class="thumb" src="${p.image}" alt="${p.title}" />
+        <img class="thumb" src="${p.image || ''}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/600x360?text=Imagem+indispon%C3%ADvel'"/>
         <div class="title">${p.title}</div>
         <div class="meta">Mercado Livre</div>
-        <div class="price">${p.price_ml}</div>
-        <a class="btn btn-ml" href="${AFF_ML}" target="_blank" rel="noopener">Ver ofertas</a>
+        <div class="price">${p.price_ml || ''}</div>
+        <a class="btn btn-ml" href="${mlLink}" target="_blank" rel="noopener">Ver ofertas</a>
       `;
       // Shopee card
       const cardSH = document.createElement('div'); cardSH.className='card';
       cardSH.innerHTML = `
-        <img class="thumb" src="${p.image}" alt="${p.title}" />
+        <img class="thumb" src="${p.image || ''}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/600x360?text=Imagem+indispon%C3%ADvel'"/>
         <div class="title">${p.title}</div>
         <div class="meta">Shopee</div>
-        <div class="price">${p.price_sh}</div>
-        <a class="btn btn-sh" href="${AFF_SH}" target="_blank" rel="noopener">Ver ofertas</a>
+        <div class="price">${p.price_sh || ''}</div>
+        <a class="btn btn-sh" href="${shLink}" target="_blank" rel="noopener">Ver ofertas</a>
       `;
-
       comp.appendChild(cardML);
       comp.appendChild(cardSH);
-      catEl.appendChild(comp);
+      section.appendChild(comp);
     });
 
-    container.appendChild(catEl);
-  });
+    content.appendChild(section);
+  }
+
+  // pager
+  pager.innerHTML = '';
+  for(let i=1;i<=pages;i++){
+    const b = document.createElement('button'); b.className='pageBtn'; b.textContent=i;
+    if(i===page) b.style.fontWeight='700';
+    b.addEventListener('click',()=>renderPage(i));
+    pager.appendChild(b);
+  }
 }
 
-/* eventos */
-document.getElementById('selectCategory').addEventListener('change', render);
-document.getElementById('selectStore').addEventListener('change', function(){
-  const s = this.value;
-  // simple filter: if specific store selected, hide other column via CSS or recreate nodes:
-  // We'll re-render but prices remain; buttons link to both stores — user can click whichever.
-  render();
+document.getElementById('fileCsv').addEventListener('change', async (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const txt = await f.text();
+  const data = parseCSV(txt);
+  PRODUCTS = data.map(r=>{
+    return {
+      id: r.id || (Math.random().toString(36).slice(2,9)),
+      title: r.title || '',
+      category: (r.category || 'geral').toLowerCase(),
+      image: r.image || '',
+      price_ml: r.price_ml || '',
+      link_ml: r.link_ml || '',
+      price_sh: r.price_sh || '',
+      link_sh: r.link_sh || ''
+    };
+  });
+  setCategories();
+  renderPage(1);
+  alert('Importação concluída: ' + PRODUCTS.length + ' produtos');
 });
-document.getElementById('q').addEventListener('input', ()=>setTimeout(render,200));
 
-render();
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  PRODUCTS = [];
+  setCategories();
+  renderPage(1);
+});
 
-/* PWA manifest dynamic creation (so single file works) */
+qInput.addEventListener('input', ()=> setTimeout(()=>renderPage(1),200));
+selectCategory.addEventListener('change', ()=> renderPage(1));
+selectStore.addEventListener('change', ()=> renderPage(1));
+
+// demo fallback (se não importar CSV)
+PRODUCTS = [
+  {id:'p1',title:'Smartphone X 128GB',category:'celulares',image:'https://i.imgur.com/8Qf2g3M.jpg',price_ml:'R$1.499',link_ml:'https://mercadolivre.com/sec/1jqZ4VC',price_sh:'R$1.439',link_sh:'https://s.shopee.com.br/gHq992bIx'},
+  {id:'p2',title:'Fone Bluetooth Pro',category:'celulares',image:'https://i.imgur.com/1KQ9ZsH.jpg',price_ml:'R$199',link_ml:'https://mercadolivre.com/sec/1jqZ4VC',price_sh:'R$179',link_sh:'https://s.shopee.com.br/gHq992bIx'},
+  {id:'p3',title:'AirFryer 3,2L',category:'cozinha',image:'https://i.imgur.com/7K7pJ2y.jpg',price_ml:'R$299',link_ml:'https://mercadolivre.com/sec/EX1',price_sh:'R$279',link_sh:'https://s.shopee.com.br/EX1'},
+  {id:'p4',title:'Jogo de Panelas 5pcs',category:'cozinha',image:'https://i.imgur.com/4YcQb2Z.jpg',price_ml:'R$249',link_ml:'https://mercadolivre.com/sec/EX2',price_sh:'R$229',link_sh:'https://s.shopee.com.br/EX2'},
+  {id:'p5',title:'Tênis Esportivo',category:'moda',image:'https://i.imgur.com/y2Q0f1w.jpg',price_ml:'R$179',link_ml:'https://mercadolivre.com/sec/EX3',price_sh:'R$159',link_sh:'https://s.shopee.com.br/EX3'},
+  {id:'p6',title:'Vestido Casual',category:'moda',image:'https://i.imgur.com/6wH2ZcI.jpg',price_ml:'R$129',link_ml:'https://mercadolivre.com/sec/EX4',price_sh:'R$119',link_sh:'https://s.shopee.com.br/EX4'},
+  {id:'p7',title:'SSD 1TB NVMe',category:'eletronicos',image:'https://i.imgur.com/3kL9n7Q.jpg',price_ml:'R$419',link_ml:'https://mercadolivre.com/sec/EX5',price_sh:'R$389',link_sh:'https://s.shopee.com.br/EX5'},
+  {id:'p8',title:'Controle GamePad',category:'games',image:'https://i.imgur.com/4B6rZ3S.jpg',price_ml:'R$199',link_ml:'https://mercadolivre.com/sec/EX6',price_sh:'R$189',link_sh:'https://s.shopee.com.br/EX6'},
+  {id:'p9',title:'Coleira Anti-puxão',category:'pets',image:'https://i.imgur.com/dYw8k6z.jpg',price_ml:'R$49',link_ml:'https://mercadolivre.com/sec/EX7',price_sh:'R$39',link_sh:'https://s.shopee.com.br/EX7'},
+  {id:'p10',title:'Luminária LED Smart',category:'casa',image:'https://i.imgur.com/hs2Qk2a.jpg',price_ml:'R$99',link_ml:'https://mercadolivre.com/sec/EX8',price_sh:'R$89',link_sh:'https://s.shopee.com.br/EX8'},
+];
+
+setCategories();
+renderPage(1);
+
+/* PWA manifest dinâmico */
 const manifest = {
-  name: "Ofertando Mais",
-  short_name: "Ofertando",
+  name: "Ofertando+",
+  short_name: "Ofertando+",
   start_url: ".",
   display: "standalone",
   background_color: "#ffffff",
   theme_color: "#3a0f5f",
   icons: [
-    { src: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'><rect rx='64' width='512' height='512' fill='#3a0f5f'/><g transform='translate(96,96)'><rect width='320' height='240' rx='28' fill='#fff' opacity='0.04'/><path d='M40 60c0-22 16-40 36-40h148c20 0 36 18 36 40v22H40V60z' fill='#fff' /><circle cx='260' cy='56' r='10' fill='#ff8bd8'/><text x='20' y='210' fill='#ff8bd8' font-family='Arial' font-size='48' font-weight='700'>+</text></g></svg>`) , sizes: "192x192", type: "image/svg+xml" },
+    { src: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'><rect rx='64' width='512' height='512' fill='#3a0f5f'/><g transform='translate(96,96)'><rect width='320' height='240' rx='28' fill='#fff' opacity='0.04'/><path d='M40 60c0-22 16-40 36-40h148c20 0 36 18 36 40v22H40V60z' fill='#fff' /><circle cx='260' cy='56' r='10' fill='#ff8bd8'/><text x='20' y='210' fill='#ff8bd8' font-family='Arial' font-size='48' font-weight='700'>+</text></g></svg>`) , sizes: "192x192", type: "image/svg+xml" }
   ]
 };
 const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
@@ -233,28 +287,8 @@ document.head.appendChild(link);
 /* Install prompt handling */
 let deferredPrompt;
 const btnInstall = document.getElementById('btnInstall');
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  btnInstall.style.display = 'inline-block';
-});
-btnInstall.addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const choice = await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  btnInstall.style.display = 'none';
-});
-
-/* quick share */
-if (navigator.share) {
-  // optional share usage
-}
-
-/* note to user: how to edit items
-   - To change products: edit the products[] array above and replace images, titles and prices.
-   - For different affiliate links per product, replace AFF_ML / AFF_SH per product.
-*/
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; btnInstall.style.display = 'inline-block';});
+btnInstall.addEventListener('click', async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); const choice = await deferredPrompt.userChoice; deferredPrompt = null; btnInstall.style.display = 'none'; });
 </script>
 </body>
 </html>
