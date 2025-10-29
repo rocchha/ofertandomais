@@ -1,18 +1,94 @@
-:root{--bg:#f6f8fb;--card:#fff;--primary:#072A6B;--accent:#FFCB05;--text:#1b263b}
-*{box-sizing:border-box}
-body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;margin:0;background:var(--bg);color:var(--text)}
-.topbar{background:linear-gradient(180deg, #072A6B, #0a3a86);padding:14px;color:white}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:42px;height:42px}
-h1{font-size:1.1rem;margin:0;font-weight:600}
-main{padding:18px;max-width:980px;margin:0 auto}
-.controls{display:flex;gap:10px;margin-bottom:12px}
-.controls input, .controls select{flex:1;padding:10px;border-radius:8px;border:1px solid #e6e9ef}
-.offers{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-.card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.06);display:flex;flex-direction:column}
-.card .title{font-weight:600;margin-bottom:6px}
-.card .price{margin-top:auto;font-size:1.05rem;font-weight:700}
-.btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#072A6B;text-decoration:none;font-weight:700;margin-top:8px}
-.foot{margin-top:18px;text-align:center;color:#6b7280}
-.meta{color:#6b7280;font-size:0.9rem;margin-bottom:8px}
-.imgthumb{width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:8px;background:#f3f4f6}
+:root {
+  --bg: #f6f8fb;
+  --card: #fff;
+  --primary: #072A6B;
+  --accent: #FFC805;
+  --text: #1b263b;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  padding: 10px;
+}
+
+header {
+  background: linear-gradient(180deg, var(--primary), #0a3a86);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  font-size: 22px;
+  margin: 0;
+  font-weight: 700;
+}
+
+main {
+  margin-top: 20px;
+}
+
+section.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+select, input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 100%;
+  max-width: 180px;
+}
+
+.ofertas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.cartao {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.cartao img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cartao h3 {
+  font-size: 16px;
+  margin: 6px 0;
+  font-weight: 600;
+}
+
+.cartao p {
+  font-size: 14px;
+  color: #333;
+}
+
+footer {
+  margin-top: 30px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+}
