@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin - Ofertando+</title></head>
+<body>
+  <h2>Admin rápido (salva local)</h2>
+  <form id="f">
+    <input id="title" placeholder="Título" required />
+    <input id="price" placeholder="Preço" />
+    <select id="store"><option value="ml">Mercado Livre</option><option value="sh">Shopee</option></select>
+    <input id="category" placeholder="Categoria (ex: cozinha, celular)" />
+    <input id="image" placeholder="URL da imagem (opcional)" />
+    <input id="redirect" placeholder="Link afiliado (opcional)" />
+    <button>Adicionar</button>
+  </form>
+  <ul id="list"></ul>
+  <script>
+    const f=document.getElementById('f'); const list=document.getElementById('list');
+    function load(){ const arr=JSON.parse(localStorage.getItem('ofertando_offers')||'[]'); list.innerHTML=''; arr.forEach((o,i)=>{ const li=document.createElement('li'); li.textContent=o.title+' - '+(o.store||''); const btn=document.createElement('button'); btn.textContent='Rem'; btn.onclick=()=>{ arr.splice(i,1); localStorage.setItem('ofertando_offers',JSON.stringify(arr)); load(); }; li.appendChild(btn); list.appendChild(li); }); }
+    f.onsubmit=(e)=>{ e.preventDefault(); const a=JSON.parse(localStorage.getItem('ofertando_offers')||'[]'); a.push({title:document.getElementById('title').value, price:document.getElementById('price').value, store:document.getElementById('store').value, category:document.getElementById('category').value, image:document.getElementById('image').value, redirect:document.getElementById('redirect').value}); localStorage.setItem('ofertando_offers',JSON.stringify(a)); f.reset(); load(); }
+    load();
+  </script>
+</body>
+</html>

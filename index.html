@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ofertando+</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/style.css">
+  <meta name="theme-color" content="#072A6B">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="/icons/logo.svg" alt="Ofertando+ logo" class="logo" />
+      <h1>Ofertando+</h1>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="controls">
+      <select id="filterStore">
+        <option value="all">Todas as lojas</option>
+        <option value="ml">Mercado Livre</option>
+        <option value="sh">Shopee</option>
+      </select>
+      <select id="filterCategory">
+        <option value="all">Todas as categorias</option>
+        <option value="casa">Casa & Cozinha</option>
+        <option value="celular">Celulares</option>
+        <option value="moda">Moda & Beleza</option>
+        <option value="eletronicos">Eletrônicos & Games</option>
+        <option value="informatica">Informática</option>
+        <option value="infantil">Infantil & Bebês</option>
+        <option value="automotivo">Automotivo</option>
+        <option value="pets">Pets</option>
+      </select>
+      <input id="search" placeholder="Buscar produto ou categoria" />
+    </section>
+
+    <section id="offers" class="offers"></section>
+
+    <footer class="foot">
+      <small>Ofertando+ — Links de afiliado. Transparência e ofertas reais.</small>
+    </footer>
+  </main>
+
+  <script src="/config.js"></script>
+  <script src="/app.js"></script>
+  <script>
+    if('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .catch(()=>console.log('SW failed'));
+    }
+  </script>
+</body>
+</html>
